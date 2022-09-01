@@ -348,6 +348,7 @@ public class GrantPermissionsViewHandlerImpl implements GrantPermissionsViewHand
                 if (mResultListener != null) {
                     view.performAccessibilityAction(
                             AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS, null);
+                    //最终监听回调出去了 GrantPermissionsActivity.onPermissionGrantResult
                     mResultListener.onPermissionGrantResult(mGroupName, true, false);
                 }
                 break;

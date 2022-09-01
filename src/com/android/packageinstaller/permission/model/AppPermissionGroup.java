@@ -365,12 +365,12 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup> 
                     && !ArrayUtils.contains(filterPermissions, permission.getName())) {
                 continue;
             }
-
+            //如果是不允许动态申请的权限则直接跳过
             if (!permission.isGrantingAllowed(mIsEphemeralApp, mAppSupportsRuntimePermissions)) {
                 // Skip unallowed permissions.
                 continue;
             }
-
+            //如果改权限是系统的则不允许修改
             if (mAppSupportsRuntimePermissions) {
                 // Do not touch permissions fixed by the system.
                 if (permission.isSystemFixed()) {
@@ -382,7 +382,7 @@ public final class AppPermissionGroup implements Comparable<AppPermissionGroup> 
                     permission.setAppOpAllowed(true);
                     mAppOps.setUidMode(permission.getAppOp(), uid, AppOpsManager.MODE_ALLOWED);
                 }
-
+                //最终授权会走到这里
                 // Grant the permission if needed.
                 if (!permission.isGranted()) {
                     permission.setGranted(true);

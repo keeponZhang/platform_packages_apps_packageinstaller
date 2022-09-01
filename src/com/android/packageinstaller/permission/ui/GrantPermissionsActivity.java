@@ -119,9 +119,10 @@ public class GrantPermissionsActivity extends OverlayTouchActivity
             mViewHandler = new GrantPermissionsAutoViewHandler(this, mCallingPackage)
                     .setResultListener(this);
         } else {
+            //移动设备会走它
             mViewHandler = new com.android.packageinstaller.permission.ui.handheld
                     .GrantPermissionsViewHandlerImpl(this, mCallingPackage)
-                    .setResultListener(this);
+                    .setResultListener(this);//记得这里设置了一个监听回调，在下面的分析中会要用到
         }
 
         mRequestedPermissions = getIntent().getStringArrayExtra(
@@ -450,6 +451,7 @@ public class GrantPermissionsActivity extends OverlayTouchActivity
         GroupState groupState = mRequestGrantPermissionGroups.get(name);
         if (groupState != null && groupState.mGroup != null) {
             if (granted) {
+                //我们重点是看用户点击了允许的流程，所以会走到这个分支来
                 groupState.mGroup.grantRuntimePermissions(doNotAskAgain,
                         groupState.affectedPermissions);
                 groupState.mState = GroupState.STATE_ALLOWED;
@@ -472,6 +474,7 @@ public class GrantPermissionsActivity extends OverlayTouchActivity
             updateGrantResults(groupState.mGroup);
         }
         if (!showNextPermissionGroupGrantRequest()) {
+            //此时授权界面就消失了，接下来则会回到执行我们界面的Activity.onResume()方法
             setResultAndFinish();
         }
     }
